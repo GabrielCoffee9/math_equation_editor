@@ -8,8 +8,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FluentApp(
+      debugShowCheckedModeBanner: false,
       title: 'Editor de equações matemáticas',
       theme: FluentThemeData(accentColor: Colors.blue),
+      darkTheme: FluentThemeData(
+        brightness: Brightness.dark,
+        accentColor: Colors.green,
+      ),
+      themeMode: ThemeMode.light,
       home: const MyHomePage(),
     );
   }
