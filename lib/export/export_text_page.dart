@@ -74,7 +74,7 @@ class _ExportTextPageState extends State<ExportTextPage> {
           ),
           SelectableText(
             tempText ?? widget.text,
-            style: const TextStyle(fontSize: 24.0),
+            style: const TextStyle(fontSize: 34.0),
           ),
           const SizedBox(
             height: 1e2,
@@ -113,9 +113,9 @@ class _ExportTextPageState extends State<ExportTextPage> {
               FilledButton(
                   child: const Text('Salvar'),
                   onPressed: () async {
-                    var _result = await exporter
-                        .saveTex(tempText ?? widget.text, defaultExt: 'txt');
-                    if (_result) {
+                    var result = await exporter.saveTex(tempText ?? widget.text,
+                        defaultExt: 'txt');
+                    if (result) {
                       // ignore: use_build_context_synchronously
                       if (!context.mounted) return;
                       displayInfoBar(context, builder: (context, close) {

@@ -10,12 +10,22 @@ class MyApp extends StatelessWidget {
     return FluentApp(
       debugShowCheckedModeBanner: false,
       title: 'Editor de equações matemáticas',
-      theme: FluentThemeData(accentColor: Colors.blue),
-      darkTheme: FluentThemeData(
-        brightness: Brightness.dark,
-        accentColor: Colors.green,
+      theme: FluentThemeData(
+        accentColor: Colors.blue,
+        buttonTheme: ButtonThemeData(
+          filledButtonStyle: ButtonStyle(
+            backgroundColor: ButtonState.all<Color>(Colors.black),
+          ),
+        ),
+        toggleSwitchTheme: ToggleSwitchThemeData(
+          checkedDecoration: ButtonState.all<Decoration>(
+            BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(100),
+            ),
+          ),
+        ),
       ),
-      themeMode: ThemeMode.light,
       home: const MyHomePage(),
     );
   }

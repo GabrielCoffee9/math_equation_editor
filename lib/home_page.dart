@@ -58,6 +58,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         variables: const [],
                         keyboardType: MathKeyboardType.expression,
                         decoration: InputDecoration(
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                            ),
+                          ),
                           hintText:
                               twoSides ? 'Lado esquerdo da equação' : 'Equação',
                           border: const OutlineInputBorder(),
@@ -89,6 +94,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       variables: const [],
                       keyboardType: MathKeyboardType.expression,
                       decoration: InputDecoration(
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.black,
+                          ),
+                        ),
                         hintText:
                             twoSides ? 'Lado direito da equação' : 'Equação',
                         border: const OutlineInputBorder(),

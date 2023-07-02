@@ -3,9 +3,20 @@ import 'package:tex/tex.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class RenderTex extends StatelessWidget {
-  const RenderTex({super.key, this.textSource = ''});
+  const RenderTex({
+    super.key,
+    required this.textSource,
+    this.red = 0,
+    this.blue = 0,
+    this.green = 0,
+    this.scaleValue = 2.0,
+  });
 
   final String textSource;
+  final int red;
+  final int green;
+  final int blue;
+  final double scaleValue;
 
   String _replaceUncompatibleTex(String textSource) => textSource
       .replaceAll(r'\Alpha', ' A ')
@@ -17,16 +28,18 @@ class RenderTex extends StatelessWidget {
       .replaceAll(r'\Kappa', ' K ')
       .replaceAll(r'\Mu', ' M ')
       .replaceAll(r'\Nu', ' N ')
-      .replaceAll(r'\Rho', ' R ')
+      .replaceAll(r'\Rho', ' P ')
       .replaceAll(r'\Tau', ' T ')
       .replaceAll(r'\Chi', ' X ');
 
   @override
   Widget build(BuildContext context) {
+    TeX tex = TeX();
+
     InlineSpan equationWidget;
 
-    var tex = TeX();
-    tex.scalingFactor = 2;
+    tex.setColor(red, green, blue);
+    tex.scalingFactor = scaleValue;
 
     var svg = tex.tex2svg(
       textSource.isNotEmpty ? _replaceUncompatibleTex(textSource) : textSource,
