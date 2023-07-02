@@ -3,6 +3,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 
+import '../widgets/copy_save_buttons.dart';
 import 'exporter.dart';
 
 class ExportTexPage extends StatefulWidget {
@@ -80,50 +81,40 @@ class _ExportTexPageState extends State<ExportTexPage> {
             tempTex ?? widget.tex,
             style: const TextStyle(fontSize: 34.0),
           ),
-          const SizedBox(height: 1e2),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              FilledButton(
-                child: const Text('Copiar'),
-                onPressed: () async {
-                  try {
-                    await Clipboard.setData(
-                      ClipboardData(text: tempTex ?? widget.tex),
-                    );
-
-                    exporter.displayExportResult(
-                      context,
-                      'Copiado!',
-                      'Conteúdo TeX copiado para a área de transferência',
-                    );
-                  } catch (e) {
-                    exporter.displayExportResult(
-                        context, 'Erro', 'Descrição : $e', false);
-                  }
-                },
-              ),
-              FilledButton(
-                  child: const Text('Salvar'),
-                  onPressed: () async {
-                    try {
-                      var result =
-                          await exporter.saveTex(tempTex ?? widget.tex);
-                      if (result) {
-                        exporter.displayExportResult(
-                          context,
-                          'Salvo!',
-                          'Conteúdo TeX foi salvo no local escolhido',
-                        );
-                      }
-                    } catch (e) {
-                      exporter.displayExportResult(
-                          context, 'Erro', 'Descrição : $e', false);
-                    }
-                  }),
-            ],
-          )
         ],
+      ),
+      bottomBar: CopySaveButtons(
+        copyOnPressed: () async {
+          try {
+            await Clipboard.setData(
+              ClipboardData(text: tempTex ?? widget.tex),
+            );
+
+            exporter.displayExportResult(
+              context,
+              'Copiado!',
+              'Conteúdo TeX copiado para a área de transferência',
+            );
+          } catch (e) {
+            exporter.displayExportResult(
+                context, 'Erro', 'Descrição : $e', false);
+          }
+        },
+        saveOnPressed: () async {
+          try {
+            var result = await exporter.saveTex(tempTex ?? widget.tex);
+            if (result) {
+              exporter.displayExportResult(
+                context,
+                'Salvo!',
+                'Conteúdo TeX foi salvo no local escolhido',
+              );
+            }
+          } catch (e) {
+            exporter.displayExportResult(
+                context, 'Erro', 'Descrição : $e', false);
+          }
+        },
       ),
     );
   }

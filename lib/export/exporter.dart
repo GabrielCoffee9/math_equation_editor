@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/rendering.dart';
 import 'package:tex/tex.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 import '../widgets/save_info_bar.dart';
 
@@ -71,7 +72,9 @@ class Exporter {
         .replaceAll(r'\infty', '∞')
         .replaceAll(r'\log', 'log')
         .replaceAll(r'\sqrt', '√')
-        .replaceAll(r'\cdot', '·');
+        .replaceAll(r'\cdot', '·')
+        .replaceAll(r'\ge', '≥')
+        .replaceAll(r'\le', '≤');
   }
 
   Future<bool> saveTex(String tex, {String defaultExt = 'tex'}) async {
@@ -89,6 +92,42 @@ class Exporter {
 
     File file = File(outputFile);
     await file.writeAsString(tex);
+
+    return true;
+  }
+
+  Future<bool> savePDF(String texsrc) async {
+    String? outputFile = await FilePicker.platform.saveFile(
+      lockParentWindow: true,
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+      dialogTitle: 'Salvar como',
+      fileName: 'export.pdf',
+    );
+
+    if (outputFile == null) {
+      return false;
+    }
+
+    final pdf = pw.Document();
+
+    var tex = TeX();
+    tex.scalingFactor = 2.0;
+
+    final svgImage = pw.SvgImage(svg: tex.tex2svg(texsrc, displayStyle: true));
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Center(
+            child: svgImage,
+          ); // Center
+        },
+      ),
+    );
+
+    final file = File(outputFile);
+    await file.writeAsBytes(await pdf.save());
 
     return true;
   }

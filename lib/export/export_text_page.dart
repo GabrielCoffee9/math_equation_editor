@@ -1,6 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
-import 'package:math_equation_editor/export/exporter.dart';
+
+import '../widgets/copy_save_buttons.dart';
+import 'exporter.dart';
 
 class ExportTextPage extends StatefulWidget {
   const ExportTextPage({super.key, this.text = ''});
@@ -13,10 +17,11 @@ class ExportTextPage extends StatefulWidget {
 class _ExportTextPageState extends State<ExportTextPage> {
   String? tempText;
   String? originalText;
-  TextEditingController leftSubEditingController = TextEditingController();
-  TextEditingController rightSubEditingController = TextEditingController();
 
-  Exporter exporter = Exporter();
+  var leftSubEditingController = TextEditingController();
+  var rightSubEditingController = TextEditingController();
+
+  var exporter = Exporter();
 
   @override
   void initState() {
@@ -76,67 +81,40 @@ class _ExportTextPageState extends State<ExportTextPage> {
             tempText ?? widget.text,
             style: const TextStyle(fontSize: 34.0),
           ),
-          const SizedBox(
-            height: 1e2,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              FilledButton(
-                child: const Text('Copiar'),
-                onPressed: () async {
-                  try {
-                    await Clipboard.setData(
-                      ClipboardData(text: tempText ?? widget.text),
-                    );
-                    // ignore: use_build_context_synchronously
-                    if (!context.mounted) return;
-                    displayInfoBar(context, builder: (context, close) {
-                      return InfoBar(
-                        title: const Text('Copiado!'),
-                        content: const Text(
-                          'Texto copiado para a área de transferência',
-                        ),
-                        action: IconButton(
-                          icon: const Icon(FluentIcons.clear),
-                          onPressed: close,
-                        ),
-                        severity: InfoBarSeverity.success,
-                      );
-                    });
-                    Navigator.of(context).pop();
-                  } catch (e) {
-                    //
-                  }
-                },
-              ),
-              FilledButton(
-                  child: const Text('Salvar'),
-                  onPressed: () async {
-                    var result = await exporter.saveTex(tempText ?? widget.text,
-                        defaultExt: 'txt');
-                    if (result) {
-                      // ignore: use_build_context_synchronously
-                      if (!context.mounted) return;
-                      displayInfoBar(context, builder: (context, close) {
-                        return InfoBar(
-                          title: const Text('Salvo!'),
-                          content: const Text(
-                            'O texto foi salvo no local escolhido',
-                          ),
-                          action: IconButton(
-                            icon: const Icon(FluentIcons.clear),
-                            onPressed: close,
-                          ),
-                          severity: InfoBarSeverity.success,
-                        );
-                      });
-                      Navigator.of(context).pop();
-                    }
-                  }),
-            ],
-          )
         ],
+      ),
+      bottomBar: CopySaveButtons(
+        copyOnPressed: () async {
+          try {
+            await Clipboard.setData(
+              ClipboardData(text: tempText ?? widget.text),
+            );
+            exporter.displayExportResult(
+              context,
+              'Copiado!',
+              'Texto copiado para a área de transferência',
+            );
+          } catch (e) {
+            exporter.displayExportResult(
+                context, 'Erro', 'Descrição : $e', false);
+          }
+        },
+        saveOnPressed: () async {
+          try {
+            var result = await exporter.saveTex(tempText ?? widget.text,
+                defaultExt: 'txt');
+            if (result) {
+              exporter.displayExportResult(
+                context,
+                'Salvo!',
+                'O texto foi salvo no local escolhido',
+              );
+            }
+          } catch (e) {
+            exporter.displayExportResult(
+                context, 'Erro', 'Descrição : $e', false);
+          }
+        },
       ),
     );
   }

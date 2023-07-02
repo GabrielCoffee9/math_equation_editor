@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 import '../export/export_jpeg_page.dart';
+import '../export/export_pdf_page.dart';
 import '../export/export_png_page.dart';
 import '../export/export_svg_page.dart';
 import '../export/export_tex_page.dart';
@@ -126,8 +127,10 @@ class _ExportFlyoutState extends State<ExportFlyout> {
       'TeX': ExportTexPage(tex: tex),
       'SVG': ExportSvgPage(tex: tex),
       'PNG': ExportPngPage(tex: tex),
-      'JPEG': ExportJpegPage(tex: tex)
+      'JPEG': ExportJpegPage(tex: tex),
+      'PDF': ExportPdfPage(tex: tex)
     };
+
     await showDialog<String>(
       dismissWithEsc: true,
       barrierDismissible: true,

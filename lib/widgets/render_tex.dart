@@ -13,9 +13,11 @@ class RenderTex extends StatelessWidget {
   });
 
   final String textSource;
+
   final int red;
   final int green;
   final int blue;
+
   final double scaleValue;
 
   String _replaceUncompatibleTex(String textSource) => textSource
@@ -30,7 +32,9 @@ class RenderTex extends StatelessWidget {
       .replaceAll(r'\Nu', ' N ')
       .replaceAll(r'\Rho', ' P ')
       .replaceAll(r'\Tau', ' T ')
-      .replaceAll(r'\Chi', ' X ');
+      .replaceAll(r'\Chi', ' X ')
+      .replaceAll(r'\le', r'\leq')
+      .replaceAll(r'\ge', r'\geq');
 
   @override
   Widget build(BuildContext context) {

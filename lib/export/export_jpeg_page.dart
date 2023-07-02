@@ -4,6 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:math_keyboard/math_keyboard.dart';
 
+import '../widgets/copy_save_buttons.dart';
 import '../widgets/render_tex.dart';
 import '../widgets/widget_to_image.dart';
 import 'exporter.dart';
@@ -174,57 +175,47 @@ class _ExportJpegPageState extends State<ExportJpegPage> {
               key: jpegKey,
               targetWidget: renderTex,
             ),
-            const SizedBox(height: 1e2),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                FilledButton(
-                  onPressed: () async {
-                    try {
-                      await Clipboard.setData(
-                        ClipboardData(text: renderTex.textSource),
-                      );
-
-                      exporter.displayExportResult(
-                        context,
-                        'Copiado!',
-                        'JPEG copiado para a área de transferência',
-                      );
-                    } catch (e) {
-                      exporter.displayExportResult(
-                          context, 'Erro', 'Descrição : $e', false);
-                    }
-                  },
-                  child: const Text('Copiar'),
-                ),
-                FilledButton(
-                  onPressed: () async {
-                    try {
-                      var result = await exporter.saveWidgetAsImage(
-                        context,
-                        jpegKey,
-                        pixelRatio: renderTex.scaleValue,
-                        defaultExt: 'jpeg',
-                      );
-
-                      if (result) {
-                        exporter.displayExportResult(
-                          context,
-                          'Salvo!',
-                          'O JPEG foi salvo no local escolhido',
-                        );
-                      }
-                    } catch (e) {
-                      exporter.displayExportResult(
-                          context, 'Erro', 'Descrição : $e', false);
-                    }
-                  },
-                  child: const Text('Salvar'),
-                ),
-              ],
-            )
           ],
         ),
+      ),
+      bottomBar: CopySaveButtons(
+        copyOnPressed: () async {
+          try {
+            await Clipboard.setData(
+              ClipboardData(text: renderTex.textSource),
+            );
+
+            exporter.displayExportResult(
+              context,
+              'Copiado!',
+              'JPEG copiado para a área de transferência',
+            );
+          } catch (e) {
+            exporter.displayExportResult(
+                context, 'Erro', 'Descrição : $e', false);
+          }
+        },
+        saveOnPressed: () async {
+          try {
+            var result = await exporter.saveWidgetAsImage(
+              context,
+              jpegKey,
+              pixelRatio: renderTex.scaleValue,
+              defaultExt: 'jpeg',
+            );
+
+            if (result) {
+              exporter.displayExportResult(
+                context,
+                'Salvo!',
+                'O JPEG foi salvo no local escolhido',
+              );
+            }
+          } catch (e) {
+            exporter.displayExportResult(
+                context, 'Erro', 'Descrição : $e', false);
+          }
+        },
       ),
     );
   }

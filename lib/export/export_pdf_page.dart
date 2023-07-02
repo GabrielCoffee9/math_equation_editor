@@ -9,15 +9,15 @@ import '../widgets/render_tex.dart';
 import '../widgets/widget_to_image.dart';
 import 'exporter.dart';
 
-class ExportPngPage extends StatefulWidget {
-  const ExportPngPage({super.key, this.tex = ''});
+class ExportPdfPage extends StatefulWidget {
+  const ExportPdfPage({super.key, this.tex = ''});
   final String tex;
 
   @override
-  State<ExportPngPage> createState() => _ExportPngPageState();
+  State<ExportPdfPage> createState() => _ExportPdfState();
 }
 
-class _ExportPngPageState extends State<ExportPngPage> {
+class _ExportPdfState extends State<ExportPdfPage> {
   String? tempTex;
 
   double scaleValue = 2.0;
@@ -30,11 +30,12 @@ class _ExportPngPageState extends State<ExportPngPage> {
   var rightSubEditingController = MathFieldEditingController();
 
   var exporter = Exporter();
-  var pngKey = GlobalKey();
+  var jpegKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
+
     tempTex = widget.tex;
   }
 
@@ -171,7 +172,7 @@ class _ExportPngPageState extends State<ExportPngPage> {
               child: Text('Prévia:'),
             ),
             WidgetToImage(
-              key: pngKey,
+              key: jpegKey,
               targetWidget: renderTex,
             ),
           ],
@@ -187,7 +188,7 @@ class _ExportPngPageState extends State<ExportPngPage> {
             exporter.displayExportResult(
               context,
               'Copiado!',
-              'PNG copiado para a área de transferência',
+              'JPEG copiado para a área de transferência',
             );
           } catch (e) {
             exporter.displayExportResult(
@@ -196,17 +197,13 @@ class _ExportPngPageState extends State<ExportPngPage> {
         },
         saveOnPressed: () async {
           try {
-            var result = await exporter.saveWidgetAsImage(
-              context,
-              pngKey,
-              pixelRatio: renderTex.scaleValue,
-            );
+            var result = await exporter.savePDF(tempTex ?? widget.tex);
 
             if (result) {
               exporter.displayExportResult(
                 context,
                 'Salvo!',
-                'O PNG foi salvo no local escolhido',
+                'O PDF foi salvo no local escolhido',
               );
             }
           } catch (e) {

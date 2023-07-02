@@ -46,6 +46,7 @@ dependencies:
   path_provider: ^2.0.15
   file_picker: ^5.3.2
   widgets_to_image: any
+  pdf: ^3.10.4
 
 dev_dependencies:
   flutter_test:

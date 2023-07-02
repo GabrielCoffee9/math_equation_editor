@@ -4,6 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:math_keyboard/math_keyboard.dart';
 
+import '../widgets/copy_save_buttons.dart';
 import '../widgets/render_tex.dart';
 import 'exporter.dart';
 
@@ -174,56 +175,47 @@ class _ExportSvgPageState extends State<ExportSvgPage> {
               padding: const EdgeInsets.only(top: 50.0, bottom: 120),
               child: renderTex,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                FilledButton(
-                  onPressed: () async {
-                    try {
-                      await Clipboard.setData(
-                        ClipboardData(text: renderTex.textSource),
-                      );
-
-                      exporter.displayExportResult(
-                        context,
-                        'Copiado!',
-                        'Conteúdo SVG copiado para a área de transferência',
-                      );
-                    } catch (e) {
-                      exporter.displayExportResult(
-                          context, 'Erro', 'Descrição : $e', false);
-                    }
-                  },
-                  child: const Text('Copiar'),
-                ),
-                FilledButton(
-                  onPressed: () async {
-                    try {
-                      var result = await exporter.saveSVGImage(
-                        tempTex ?? widget.tex,
-                        renderTex.scaleValue,
-                        red: red,
-                        green: green,
-                        blue: blue,
-                      );
-                      if (result) {
-                        exporter.displayExportResult(
-                          context,
-                          'Salvo!',
-                          'O arquivo SVG foi salvo no local escolhido',
-                        );
-                      }
-                    } catch (e) {
-                      exporter.displayExportResult(
-                          context, 'Erro', 'Descrição : $e', false);
-                    }
-                  },
-                  child: const Text('Salvar'),
-                ),
-              ],
-            )
           ],
         ),
+      ),
+      bottomBar: CopySaveButtons(
+        copyOnPressed: () async {
+          try {
+            await Clipboard.setData(
+              ClipboardData(text: renderTex.textSource),
+            );
+
+            exporter.displayExportResult(
+              context,
+              'Copiado!',
+              'Conteúdo SVG copiado para a área de transferência',
+            );
+          } catch (e) {
+            exporter.displayExportResult(
+                context, 'Erro', 'Descrição : $e', false);
+          }
+        },
+        saveOnPressed: () async {
+          try {
+            var result = await exporter.saveSVGImage(
+              tempTex ?? widget.tex,
+              renderTex.scaleValue,
+              red: red,
+              green: green,
+              blue: blue,
+            );
+            if (result) {
+              exporter.displayExportResult(
+                context,
+                'Salvo!',
+                'O arquivo SVG foi salvo no local escolhido',
+              );
+            }
+          } catch (e) {
+            exporter.displayExportResult(
+                context, 'Erro', 'Descrição : $e', false);
+          }
+        },
       ),
     );
   }
