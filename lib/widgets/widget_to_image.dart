@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 
 class WidgetToImage extends StatefulWidget {
-  const WidgetToImage({super.key, required this.targetWidget});
+  const WidgetToImage({required super.key, required this.targetWidget});
   final Widget targetWidget;
 
   @override

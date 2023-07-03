@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/services.dart';
 import 'package:math_keyboard/math_keyboard.dart';
 
 import '../widgets/copy_save_buttons.dart';
@@ -181,15 +180,19 @@ class _ExportJpegPageState extends State<ExportJpegPage> {
       bottomBar: CopySaveButtons(
         copyOnPressed: () async {
           try {
-            await Clipboard.setData(
-              ClipboardData(text: renderTex.textSource),
-            );
-
-            exporter.displayExportResult(
+            var result = await exporter.copyWidgetAsImage(
               context,
-              'Copiado!',
-              'JPEG copiado para a área de transferência',
+              jpegKey,
+              pixelRatio: renderTex.scaleValue,
+              defaultExt: 'jpeg',
             );
+            if (result) {
+              exporter.displayExportResult(
+                context,
+                'Copiado!',
+                'JPEG copiado para a área de transferência',
+              );
+            }
           } catch (e) {
             exporter.displayExportResult(
                 context, 'Erro', 'Descrição : $e', false);

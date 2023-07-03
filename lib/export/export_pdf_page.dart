@@ -1,12 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/services.dart';
 import 'package:math_keyboard/math_keyboard.dart';
 
 import '../widgets/copy_save_buttons.dart';
 import '../widgets/render_tex.dart';
-import '../widgets/widget_to_image.dart';
 import 'exporter.dart';
 
 class ExportPdfPage extends StatefulWidget {
@@ -30,7 +28,6 @@ class _ExportPdfState extends State<ExportPdfPage> {
   var rightSubEditingController = MathFieldEditingController();
 
   var exporter = Exporter();
-  var jpegKey = GlobalKey();
 
   @override
   void initState() {
@@ -171,24 +168,25 @@ class _ExportPdfState extends State<ExportPdfPage> {
               padding: EdgeInsets.only(top: 60.0, bottom: 15.0),
               child: Text('Prévia:'),
             ),
-            WidgetToImage(
-              key: jpegKey,
-              targetWidget: renderTex,
-            ),
+            renderTex,
           ],
         ),
       ),
       bottomBar: CopySaveButtons(
         copyOnPressed: () async {
           try {
-            await Clipboard.setData(
-              ClipboardData(text: renderTex.textSource),
+            await exporter.copyPDF(
+              tempTex ?? widget.tex,
+              scaleValue: scaleValue,
+              red: red,
+              green: green,
+              blue: blue,
             );
 
             exporter.displayExportResult(
               context,
               'Copiado!',
-              'JPEG copiado para a área de transferência',
+              'PDF copiado para a área de transferência',
             );
           } catch (e) {
             exporter.displayExportResult(
@@ -197,7 +195,13 @@ class _ExportPdfState extends State<ExportPdfPage> {
         },
         saveOnPressed: () async {
           try {
-            var result = await exporter.savePDF(tempTex ?? widget.tex);
+            var result = await exporter.savePDF(
+              tempTex ?? widget.tex,
+              scaleValue: scaleValue,
+              red: red,
+              green: green,
+              blue: blue,
+            );
 
             if (result) {
               exporter.displayExportResult(

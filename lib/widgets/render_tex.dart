@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:tex/tex.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -52,7 +52,7 @@ class RenderTex extends StatelessWidget {
     if (svg.isEmpty) {
       equationWidget = TextSpan(
         text: tex.error,
-        style: const TextStyle(color: Colors.red),
+        style: TextStyle(color: Colors.red),
       );
 
       if (tex.error == 'Nothing to render.') {

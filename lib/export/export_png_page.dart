@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/services.dart';
 import 'package:math_keyboard/math_keyboard.dart';
 
 import '../widgets/copy_save_buttons.dart';
@@ -180,15 +179,19 @@ class _ExportPngPageState extends State<ExportPngPage> {
       bottomBar: CopySaveButtons(
         copyOnPressed: () async {
           try {
-            await Clipboard.setData(
-              ClipboardData(text: renderTex.textSource),
+            var result = await exporter.copyWidgetAsImage(
+              context,
+              pngKey,
+              pixelRatio: renderTex.scaleValue,
             );
 
-            exporter.displayExportResult(
-              context,
-              'Copiado!',
-              'PNG copiado para a área de transferência',
-            );
+            if (result) {
+              exporter.displayExportResult(
+                context,
+                'Copiado!',
+                'PNG copiado para a área de transferência',
+              );
+            }
           } catch (e) {
             exporter.displayExportResult(
                 context, 'Erro', 'Descrição : $e', false);

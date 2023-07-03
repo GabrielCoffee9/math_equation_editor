@@ -7,14 +7,9 @@ import '../export/export_svg_page.dart';
 import '../export/export_tex_page.dart';
 import '../export/export_text_page.dart';
 
-class ExportFlyout extends StatefulWidget {
+class ExportFlyout extends StatelessWidget {
   const ExportFlyout({super.key, this.tex = ''});
   final String tex;
-  @override
-  State<ExportFlyout> createState() => _ExportFlyoutState();
-}
-
-class _ExportFlyoutState extends State<ExportFlyout> {
   @override
   Widget build(BuildContext context) {
     var exportFlyoutController = FlyoutController();
@@ -36,7 +31,7 @@ class _ExportFlyoutState extends State<ExportFlyout> {
                               showExportDialog(
                                 context,
                                 'texto comum',
-                                widget.tex,
+                                tex,
                               );
                             }),
                         MenuFlyoutItem(
@@ -45,7 +40,7 @@ class _ExportFlyoutState extends State<ExportFlyout> {
                               showExportDialog(
                                 context,
                                 'TeX',
-                                widget.tex,
+                                tex,
                               );
                             }),
                       ];
@@ -61,7 +56,7 @@ class _ExportFlyoutState extends State<ExportFlyout> {
                               showExportDialog(
                                 context,
                                 'PNG',
-                                widget.tex,
+                                tex,
                               );
                             }),
                         MenuFlyoutItem(
@@ -70,7 +65,7 @@ class _ExportFlyoutState extends State<ExportFlyout> {
                               showExportDialog(
                                 context,
                                 'JPEG',
-                                widget.tex,
+                                tex,
                               );
                             }),
                         MenuFlyoutItem(
@@ -79,37 +74,21 @@ class _ExportFlyoutState extends State<ExportFlyout> {
                               showExportDialog(
                                 context,
                                 'SVG',
-                                widget.tex,
+                                tex,
                               );
                             }),
                       ];
                     },
                   ),
-                  MenuFlyoutSubItem(
-                    text: const Text('Outros'),
-                    items: (context) {
-                      return [
-                        MenuFlyoutItem(
-                            text: const Text('PDF'),
-                            onPressed: () {
-                              showExportDialog(
-                                context,
-                                'PDF',
-                                widget.tex,
-                              );
-                            }),
-                        MenuFlyoutItem(
-                            text: const Text('Uint8'),
-                            onPressed: () {
-                              showExportDialog(
-                                context,
-                                'Uint8',
-                                widget.tex,
-                              );
-                            }),
-                      ];
-                    },
-                  ),
+                  MenuFlyoutItem(
+                      text: const Text('PDF'),
+                      onPressed: () {
+                        showExportDialog(
+                          context,
+                          'PDF',
+                          tex,
+                        );
+                      }),
                 ],
               );
             },
@@ -136,7 +115,7 @@ class _ExportFlyoutState extends State<ExportFlyout> {
       barrierDismissible: true,
       context: context,
       builder: (context) => ContentDialog(
-        constraints: const BoxConstraints(maxWidth: 1024, maxHeight: 768),
+        constraints: const BoxConstraints(maxWidth: 1024, maxHeight: 650),
         title: Text('Exportar $extension'),
         content: extensionList[extension],
       ),

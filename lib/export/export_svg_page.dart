@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/services.dart';
 import 'package:math_keyboard/math_keyboard.dart';
 
 import '../widgets/copy_save_buttons.dart';
@@ -181,8 +180,12 @@ class _ExportSvgPageState extends State<ExportSvgPage> {
       bottomBar: CopySaveButtons(
         copyOnPressed: () async {
           try {
-            await Clipboard.setData(
-              ClipboardData(text: renderTex.textSource),
+            exporter.copySVG(
+              tempTex ?? widget.tex,
+              scaleValue: renderTex.scaleValue,
+              red: red,
+              green: green,
+              blue: blue,
             );
 
             exporter.displayExportResult(
@@ -197,9 +200,9 @@ class _ExportSvgPageState extends State<ExportSvgPage> {
         },
         saveOnPressed: () async {
           try {
-            var result = await exporter.saveSVGImage(
+            var result = await exporter.saveSVG(
               tempTex ?? widget.tex,
-              renderTex.scaleValue,
+              scaleValue: renderTex.scaleValue,
               red: red,
               green: green,
               blue: blue,

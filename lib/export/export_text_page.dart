@@ -79,7 +79,7 @@ class _ExportTextPageState extends State<ExportTextPage> {
           ),
           SelectableText(
             tempText ?? widget.text,
-            style: const TextStyle(fontSize: 34.0),
+            style: const TextStyle(fontSize: 50.0),
           ),
         ],
       ),
