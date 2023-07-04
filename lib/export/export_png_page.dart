@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart' show InputDecoration, OutlineInputBorder;
 import 'package:math_keyboard/math_keyboard.dart';
 
 import '../widgets/copy_save_buttons.dart';
@@ -54,11 +55,13 @@ class _ExportPngPageState extends State<ExportPngPage> {
               header: const Text(
                   'Substituir caractere ou palavra antes de exportar'),
               content: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(
                     width: 220,
                     child: MathField(
+                      decoration:
+                          const InputDecoration(border: OutlineInputBorder()),
                       variables: const [],
                       controller: leftSubEditingController,
                     ),

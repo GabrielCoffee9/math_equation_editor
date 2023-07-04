@@ -107,7 +107,7 @@ class ExportFlyout extends StatelessWidget {
       'SVG': ExportSvgPage(tex: tex),
       'PNG': ExportPngPage(tex: tex),
       'JPEG': ExportJpegPage(tex: tex),
-      'PDF': ExportPdfPage(tex: tex)
+      'PDF': ExportPdfPage(tex: tex),
     };
 
     await showDialog<String>(
