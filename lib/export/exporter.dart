@@ -84,7 +84,7 @@ class Exporter {
       String? outputFile = await FilePicker.platform.saveFile(
         lockParentWindow: true,
         type: FileType.custom,
-        allowedExtensions: ['txt', 'tex'],
+        allowedExtensions: ['json'],
         dialogTitle: 'Salvar como',
         fileName: 'export.$defaultExt',
       );

@@ -1,11 +1,12 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' show InputDecoration, OutlineInputBorder;
-import 'package:math_equation_editor/export/exporter.dart';
-import 'package:math_equation_editor/import/importer.dart';
-import 'package:math_equation_editor/widgets/context_menu.dart';
-import 'package:math_equation_editor/widgets/export_flyout.dart';
-import 'package:math_equation_editor/widgets/render_tex.dart';
 import 'package:math_keyboard/math_keyboard.dart';
+
+import 'export/exporter.dart';
+import 'import/importer.dart';
+import 'widgets/context_menu.dart';
+import 'widgets/export_flyout.dart';
+import 'widgets/render_tex.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -21,7 +22,32 @@ class _MyHomePageState extends State<MyHomePage> {
   String leftField = '';
   String rightField = '';
 
-  bool twoSides = false;
+  ValueNotifier<bool> twoSides = ValueNotifier(false);
+
+  @override
+  void dispose() {
+    leftController.dispose();
+    rightController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    twoSides.addListener(() {
+      setState(() {
+        if (twoSides.value) {
+          if (rightController.alreadyDisposed) {
+            rightController = MathFieldEditingController();
+          }
+        } else {
+          rightField = '';
+          rightController.dispose();
+        }
+      });
+    });
+  }
 
   var importer = Importer();
   @override
@@ -51,27 +77,31 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     Button(
                       onPressed: () async {
-                        var importerResult = await importer.importEquation();
-                        setState(() {
-                          leftController.rootFromJson(importerResult.$1);
+                        try {
+                          var importerResult = await importer.importEquation();
+                          setState(() {
+                            leftController.rootFromJson(importerResult.$1);
+                            leftField = leftController.currentEditingValue();
 
-                          leftField = leftController.currentEditingValue();
+                            if (importerResult.$2 != null) {
+                              twoSides.value = true;
 
-                          if (importerResult.$2 != null) {
-                            rightController.rootFromJson(importerResult.$2!);
-                            rightField = rightController.currentEditingValue();
-                            twoSides = true;
-                          } else {
-                            twoSides = false;
-                            rightController.clear();
-                            rightField = '';
-                          }
-                        });
+                              rightController.rootFromJson(importerResult.$2!);
+                              rightField =
+                                  rightController.currentEditingValue();
+                            } else {
+                              twoSides.value = false;
+                              rightField = '';
+                            }
+                          });
+                        } catch (e) {
+                          //
+                        }
                       },
                       child: const Text('Importar equação'),
                     ),
                     ExportFlyout(
-                      tex: (twoSides && rightField.isNotEmpty)
+                      tex: (twoSides.value && rightField.isNotEmpty)
                           ? ('$leftField = $rightField')
                           : leftField,
                     )
@@ -97,8 +127,9 @@ class _MyHomePageState extends State<MyHomePage> {
                               color: Colors.black,
                             ),
                           ),
-                          hintText:
-                              twoSides ? 'Lado esquerdo da equação' : 'Equação',
+                          hintText: twoSides.value
+                              ? 'Lado esquerdo da equação'
+                              : 'Equação',
                           border: const OutlineInputBorder(),
                         ),
                         onChanged: (value) {
@@ -111,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 ),
                 Visibility(
-                  visible: twoSides,
+                  visible: twoSides.value,
                   child: const Padding(
                     padding: EdgeInsets.only(left: 8.0, right: 8.0),
                     child: Text(
@@ -121,7 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 Visibility(
-                  visible: twoSides,
+                  visible: twoSides.value,
                   child: SizedBox(
                     width: 350,
                     child: MathField(
@@ -134,8 +165,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             color: Colors.black,
                           ),
                         ),
-                        hintText:
-                            twoSides ? 'Lado direito da equação' : 'Equação',
+                        hintText: twoSides.value
+                            ? 'Lado direito da equação'
+                            : 'Equação',
                         border: const OutlineInputBorder(),
                       ),
                       onChanged: (value) {
@@ -152,16 +184,12 @@ class _MyHomePageState extends State<MyHomePage> {
               height: 40,
             ),
             ToggleSwitch(
-              content:
-                  Text(twoSides ? 'Igualdade ativada' : 'Igualdade desativada'),
-              checked: twoSides,
+              content: Text(twoSides.value
+                  ? 'Igualdade ativada'
+                  : 'Igualdade desativada'),
+              checked: twoSides.value,
               onChanged: (value) {
-                setState(() {
-                  twoSides = value;
-                  if (!twoSides) {
-                    rightField = '';
-                  }
-                });
+                twoSides.value = value;
               },
             ),
             Padding(
@@ -177,7 +205,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         label: const Text('Share'),
                         onPressed: () {
                           Exporter().saveTex(
-                              '${leftController.rootToJson()} = ${rightController.rootToJson()}');
+                            (twoSides.value && rightField.isNotEmpty)
+                                ? '${leftController.rootToJson()} = ${rightController.rootToJson()}'
+                                : leftController.rootToJson(),
+                            defaultExt: 'json',
+                          );
                         },
                       ),
                       CommandBarButton(
@@ -192,7 +224,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ],
                     child: RenderTex(
-                      textSource: (twoSides && rightField.isNotEmpty)
+                      textSource: (twoSides.value && rightField.isNotEmpty)
                           ? ('$leftField = $rightField')
                           : leftField,
                     ),

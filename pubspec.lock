@@ -282,7 +282,7 @@ packages:
     description:
       path: math_keyboard
       ref: HEAD
-      resolved-ref: "7887b1d536abdd67fc4ab48ce9d42915f8a27517"
+      resolved-ref: "97641e6eed8cd01961a0ce665cf56f80449a60b0"
       url: "https://github.com/GabrielCoffee9/math_keyboard"
     source: git
     version: "0.2.0"
