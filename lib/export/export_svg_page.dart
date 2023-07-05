@@ -57,8 +57,9 @@ class _ExportSvgPageState extends State<ExportSvgPage> {
                   SizedBox(
                     width: 220,
                     child: MathField(
-                      variables: const [],
                       controller: leftSubEditingController,
+                      authorizeAnyKey: true,
+                      variables: const [],
                     ),
                   ),
                   const SizedBox(
@@ -68,8 +69,9 @@ class _ExportSvgPageState extends State<ExportSvgPage> {
                   SizedBox(
                     width: 220,
                     child: MathField(
-                      variables: const [],
                       controller: rightSubEditingController,
+                      authorizeAnyKey: true,
+                      variables: const [],
                     ),
                   ),
                   FilledButton(

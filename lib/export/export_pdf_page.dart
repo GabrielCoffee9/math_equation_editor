@@ -58,16 +58,18 @@ class _ExportPdfState extends State<ExportPdfPage> {
                   SizedBox(
                     width: 220,
                     child: MathField(
-                      variables: const [],
                       controller: leftSubEditingController,
+                      authorizeAnyKey: true,
+                      variables: const [],
                     ),
                   ),
                   const SizedBox(width: 10, child: Text('>')),
                   SizedBox(
                     width: 220,
                     child: MathField(
-                      variables: const [],
                       controller: rightSubEditingController,
+                      authorizeAnyKey: true,
+                      variables: const [],
                     ),
                   ),
                   FilledButton(

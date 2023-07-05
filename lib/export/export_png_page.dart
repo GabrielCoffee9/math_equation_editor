@@ -60,18 +60,20 @@ class _ExportPngPageState extends State<ExportPngPage> {
                   SizedBox(
                     width: 220,
                     child: MathField(
+                      controller: leftSubEditingController,
+                      authorizeAnyKey: true,
                       decoration:
                           const InputDecoration(border: OutlineInputBorder()),
                       variables: const [],
-                      controller: leftSubEditingController,
                     ),
                   ),
                   const SizedBox(width: 10, child: Text('>')),
                   SizedBox(
                     width: 220,
                     child: MathField(
-                      variables: const [],
                       controller: rightSubEditingController,
+                      authorizeAnyKey: true,
+                      variables: const [],
                     ),
                   ),
                   FilledButton(

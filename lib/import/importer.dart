@@ -27,7 +27,7 @@ class Importer {
       String leftSide = '';
       String? rightSide;
 
-      List<String> equalSignSplit = fullMath.split('=');
+      List<String> equalSignSplit = fullMath.split('?=?');
 
       leftSide = equalSignSplit[0];
 

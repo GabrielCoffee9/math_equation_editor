@@ -54,183 +54,197 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return NavigationView(
       content: ScaffoldPage(
-        content: Column(
-          children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.only(left: 8.0, right: 8.0),
-              child: RenderTex(
-                textSource:
-                    r'\frac{\Mu ath \sum quation \sum ditor}{\alpha lpha}',
-                scaleValue: 3,
-              ),
-            ),
-            Container(
-              height: 70,
-              width: 400,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(18),
-                color: Colors.transparent,
-              ),
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Button(
-                      onPressed: () async {
-                        try {
-                          var importerResult = await importer.importEquation();
-                          setState(() {
-                            leftController.rootFromJson(importerResult.$1);
-                            leftField = leftController.currentEditingValue();
+        content: ListView(
+          children: [
+            Column(
+              children: <Widget>[
+                const Padding(
+                  padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                  child: RenderTex(
+                    textSource:
+                        r'\frac{\Mu ath \sum quation \sum ditor}{\alpha lpha}',
+                    scaleValue: 3,
+                  ),
+                ),
+                Container(
+                  height: 70,
+                  width: 400,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(18),
+                    color: Colors.transparent,
+                  ),
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Button(
+                          onPressed: () async {
+                            try {
+                              var importerResult =
+                                  await importer.importEquation();
+                              setState(() {
+                                leftController.rootFromJson(importerResult.$1);
+                                leftField =
+                                    leftController.currentEditingValue();
 
-                            if (importerResult.$2 != null) {
-                              twoSides.value = true;
+                                if (importerResult.$2 != null) {
+                                  twoSides.value = true;
 
-                              rightController.rootFromJson(importerResult.$2!);
-                              rightField =
-                                  rightController.currentEditingValue();
-                            } else {
-                              twoSides.value = false;
-                              rightField = '';
+                                  rightController
+                                      .rootFromJson(importerResult.$2!);
+                                  rightField =
+                                      rightController.currentEditingValue();
+                                } else {
+                                  twoSides.value = false;
+                                  rightField = '';
+                                }
+                              });
+                            } catch (e) {
+                              //
                             }
-                          });
-                        } catch (e) {
-                          //
-                        }
-                      },
-                      child: const Text('Importar equação'),
+                          },
+                          child: const Text('Importar equação'),
+                        ),
+                        ExportFlyout(
+                          tex: (twoSides.value && rightField.isNotEmpty)
+                              ? ('$leftField = $rightField')
+                              : leftField,
+                        )
+                      ],
                     ),
-                    ExportFlyout(
-                      tex: (twoSides.value && rightField.isNotEmpty)
-                          ? ('$leftField = $rightField')
-                          : leftField,
-                    )
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      width: 350,
-                      child: MathField(
-                        controller: leftController,
-                        variables: const [],
-                        keyboardType: MathKeyboardType.expression,
-                        decoration: InputDecoration(
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.black,
+                    Column(
+                      children: [
+                        SizedBox(
+                          width: 350,
+                          child: MathField(
+                            controller: leftController,
+                            authorizeAnyKey: true,
+                            variables: const [],
+                            keyboardType: MathKeyboardType.expression,
+                            decoration: InputDecoration(
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              hintText: twoSides.value
+                                  ? 'Lado esquerdo da equação'
+                                  : 'Equação',
+                              border: const OutlineInputBorder(),
                             ),
+                            onChanged: (value) {
+                              setState(() {
+                                leftField = value;
+                              });
+                            },
                           ),
-                          hintText: twoSides.value
-                              ? 'Lado esquerdo da equação'
-                              : 'Equação',
-                          border: const OutlineInputBorder(),
                         ),
-                        onChanged: (value) {
-                          setState(() {
-                            leftField = value;
-                          });
-                        },
+                      ],
+                    ),
+                    Visibility(
+                      visible: twoSides.value,
+                      child: const Padding(
+                        padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                        child: Text(
+                          '=',
+                          style: TextStyle(fontSize: 30),
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: twoSides.value,
+                      child: SizedBox(
+                        width: 350,
+                        child: MathField(
+                          controller: rightController,
+                          authorizeAnyKey: true,
+                          variables: const [],
+                          keyboardType: MathKeyboardType.expression,
+                          decoration: InputDecoration(
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.black,
+                              ),
+                            ),
+                            hintText: twoSides.value
+                                ? 'Lado direito da equação'
+                                : 'Equação',
+                            border: const OutlineInputBorder(),
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              rightField = value;
+                            });
+                          },
+                        ),
                       ),
                     ),
                   ],
                 ),
-                Visibility(
-                  visible: twoSides.value,
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 8.0, right: 8.0),
-                    child: Text(
-                      '=',
-                      style: TextStyle(fontSize: 30),
-                    ),
-                  ),
+                const SizedBox(
+                  height: 40,
                 ),
-                Visibility(
-                  visible: twoSides.value,
-                  child: SizedBox(
-                    width: 350,
-                    child: MathField(
-                      controller: rightController,
-                      variables: const [],
-                      keyboardType: MathKeyboardType.expression,
-                      decoration: InputDecoration(
-                        focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.black,
+                ToggleSwitch(
+                  content: Text(twoSides.value
+                      ? 'Igualdade ativada'
+                      : 'Igualdade desativada'),
+                  checked: twoSides.value,
+                  onChanged: (value) {
+                    twoSides.value = value;
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: Column(
+                    children: [
+                      const Text('Prévia:'),
+                      const SizedBox(height: 20.0),
+                      ContextMenu(
+                        primaryItems: [
+                          CommandBarButton(
+                            icon: const Icon(FluentIcons.share),
+                            label: const Text('Share'),
+                            onPressed: () {
+                              Exporter().saveTex(
+                                (twoSides.value && rightField.isNotEmpty)
+                                    ? '${leftController.rootToJson()} ?=? ${rightController.rootToJson()}'
+                                    : leftController.rootToJson(),
+                                defaultExt: 'json',
+                              );
+                            },
                           ),
+                          CommandBarButton(
+                            icon: const Icon(FluentIcons.copy),
+                            label: const Text('Copy'),
+                            onPressed: () {},
+                          ),
+                          CommandBarButton(
+                            icon: const Icon(FluentIcons.delete),
+                            label: const Text('Clear'),
+                            onPressed: () {},
+                          ),
+                        ],
+                        child: RenderTex(
+                          textSource: (twoSides.value && rightField.isNotEmpty)
+                              ? ('$leftField = $rightField')
+                              : leftField,
                         ),
-                        hintText: twoSides.value
-                            ? 'Lado direito da equação'
-                            : 'Equação',
-                        border: const OutlineInputBorder(),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          rightField = value;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 40,
-            ),
-            ToggleSwitch(
-              content: Text(twoSides.value
-                  ? 'Igualdade ativada'
-                  : 'Igualdade desativada'),
-              checked: twoSides.value,
-              onChanged: (value) {
-                twoSides.value = value;
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Column(
-                children: [
-                  const Text('Prévia:'),
-                  const SizedBox(height: 20.0),
-                  ContextMenu(
-                    primaryItems: [
-                      CommandBarButton(
-                        icon: const Icon(FluentIcons.share),
-                        label: const Text('Share'),
-                        onPressed: () {
-                          Exporter().saveTex(
-                            (twoSides.value && rightField.isNotEmpty)
-                                ? '${leftController.rootToJson()} = ${rightController.rootToJson()}'
-                                : leftController.rootToJson(),
-                            defaultExt: 'json',
-                          );
-                        },
-                      ),
-                      CommandBarButton(
-                        icon: const Icon(FluentIcons.copy),
-                        label: const Text('Copy'),
-                        onPressed: () {},
-                      ),
-                      CommandBarButton(
-                        icon: const Icon(FluentIcons.delete),
-                        label: const Text('Clear'),
-                        onPressed: () {},
                       ),
                     ],
-                    child: RenderTex(
-                      textSource: (twoSides.value && rightField.isNotEmpty)
-                          ? ('$leftField = $rightField')
-                          : leftField,
-                    ),
                   ),
-                ],
-              ),
+                )
+              ],
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height < 1000
+                  ? MediaQuery.of(context).size.height / 1.9
+                  : 0,
             )
           ],
         ),
