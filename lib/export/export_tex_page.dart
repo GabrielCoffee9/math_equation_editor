@@ -31,57 +31,61 @@ class _ExportTexPageState extends State<ExportTexPage> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage(
-      content: Column(
-        children: [
-          Expander(
-            header:
-                const Text('Substituir caractere ou palavra antes de exportar'),
-            content: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  width: 220,
-                  child: TextBox(
-                    controller: leftSubEditingController,
-                    placeholder: '',
+      content: SingleChildScrollView(
+        child: Column(
+          children: [
+            Expander(
+              header: const Text(
+                  'Substituir caractere ou palavra antes de exportar'),
+              content: Row(
+                children: [
+                  SizedBox(
+                    width: 220,
+                    child: TextBox(
+                      controller: leftSubEditingController,
+                      placeholder: '',
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  width: 10,
-                  child: Text('>'),
-                ),
-                SizedBox(
-                  width: 220,
-                  child: TextBox(
-                    controller: rightSubEditingController,
-                    placeholder: '',
+                  const Padding(
+                    padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                    child: Text('>'),
                   ),
-                ),
-                FilledButton(
-                  child: const Text('Substituir'),
-                  onPressed: () {
-                    setState(() {
-                      if (tempTex != null && tempTex!.isNotEmpty) {
-                        tempTex = tempTex!.replaceAll(
-                          leftSubEditingController.text,
-                          rightSubEditingController.text,
-                        );
-                      }
-                    });
-                  },
-                )
-              ],
+                  SizedBox(
+                    width: 220,
+                    child: TextBox(
+                      controller: rightSubEditingController,
+                      placeholder: '',
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: FilledButton(
+                      child: const Text('Substituir'),
+                      onPressed: () {
+                        setState(() {
+                          if (tempTex != null && tempTex!.isNotEmpty) {
+                            tempTex = tempTex!.replaceAll(
+                              leftSubEditingController.text,
+                              rightSubEditingController.text,
+                            );
+                          }
+                        });
+                      },
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(top: 60.0, bottom: 15.0),
-            child: Text('Prévia:'),
-          ),
-          SelectableText(
-            tempTex ?? widget.tex,
-            style: const TextStyle(fontSize: 50.0),
-          ),
-        ],
+            const Padding(
+              padding: EdgeInsets.only(top: 60.0, bottom: 15.0),
+              child: Text('Prévia:'),
+            ),
+            SelectableText(
+              tempTex ?? widget.tex,
+              style: const TextStyle(fontSize: 50.0),
+            ),
+          ],
+        ),
       ),
       bottomBar: CopySaveButtons(
         copyOnPressed: () async {

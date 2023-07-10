@@ -24,6 +24,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   ValueNotifier<bool> twoSides = ValueNotifier(false);
 
+  var importer = Importer();
+
   @override
   void dispose() {
     leftController.dispose();
@@ -49,7 +51,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  var importer = Importer();
   @override
   Widget build(BuildContext context) {
     return NavigationView(
@@ -209,7 +210,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         primaryItems: [
                           CommandBarButton(
                             icon: const Icon(FluentIcons.share),
-                            label: const Text('Share'),
+                            label: const Text('Compartilhar'),
                             onPressed: () {
                               Exporter().saveTex(
                                 (twoSides.value && rightField.isNotEmpty)
@@ -219,15 +220,25 @@ class _MyHomePageState extends State<MyHomePage> {
                               );
                             },
                           ),
-                          CommandBarButton(
-                            icon: const Icon(FluentIcons.copy),
-                            label: const Text('Copy'),
-                            onPressed: () {},
-                          ),
+                          // CommandBarButton(
+                          //   icon: const Icon(FluentIcons.copy),
+                          //   label: const Text('Copy'),
+                          //   onPressed: () {},
+                          // ),
                           CommandBarButton(
                             icon: const Icon(FluentIcons.delete),
-                            label: const Text('Clear'),
-                            onPressed: () {},
+                            label: const Text('Limpar'),
+                            onPressed: () {
+                              leftController.clear();
+                              if (!rightController.alreadyDisposed) {
+                                rightController.clear();
+                              }
+                              leftField = '';
+                              rightField = '';
+
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
                           ),
                         ],
                         child: RenderTex(

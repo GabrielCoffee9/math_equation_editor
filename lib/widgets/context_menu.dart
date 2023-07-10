@@ -31,7 +31,7 @@ class ContextMenu extends StatelessWidget {
           builder: (context) {
             return FlyoutContent(
               child: SizedBox(
-                width: 130.0,
+                width: 150.0,
                 child: CommandBar(
                   primaryItems: primaryItems,
                 ),

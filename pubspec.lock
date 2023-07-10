@@ -149,10 +149,10 @@ packages:
     dependency: "direct main"
     description:
       name: fluent_ui
-      sha256: "456c66be2d1e5eab4c0f81dac1c55e023e65d31e81488ed4463741ce10928417"
+      sha256: be237134ab215d4a1591307f6286f4aa53ed5a492c2ee56be5d86be344fd16db
       url: "https://pub.dev"
     source: hosted
-    version: "4.6.2"
+    version: "4.7.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -282,7 +282,7 @@ packages:
     description:
       path: math_keyboard
       ref: HEAD
-      resolved-ref: "3a8331aa9a1ecfaa59d97d5070244ac2ecff540c"
+      resolved-ref: "2cf62441e961cd0c2f8fff363cef1d400977d41e"
       url: "https://github.com/GabrielCoffee9/math_keyboard"
     source: git
     version: "0.2.0"

@@ -2,6 +2,7 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:math_keyboard/math_keyboard.dart';
+import 'package:flutter/material.dart' show InputDecoration, OutlineInputBorder;
 
 import '../widgets/copy_save_buttons.dart';
 import '../widgets/render_tex.dart';
@@ -52,18 +53,20 @@ class _ExportSvgPageState extends State<ExportSvgPage> {
                 'Substituir caractere ou palavra antes de exportar',
               ),
               content: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
                     width: 220,
                     child: MathField(
                       controller: leftSubEditingController,
                       authorizeAnyKey: true,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
                       variables: const [],
                     ),
                   ),
-                  const SizedBox(
-                    width: 10,
+                  const Padding(
+                    padding: EdgeInsets.only(left: 8.0, right: 8.0),
                     child: Text('>'),
                   ),
                   SizedBox(
@@ -71,21 +74,27 @@ class _ExportSvgPageState extends State<ExportSvgPage> {
                     child: MathField(
                       controller: rightSubEditingController,
                       authorizeAnyKey: true,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
                       variables: const [],
                     ),
                   ),
-                  FilledButton(
-                    onPressed: () {
-                      setState(() {
-                        if (tempTex != null && tempTex!.isNotEmpty) {
-                          tempTex = tempTex!.replaceAll(
-                            leftSubEditingController.currentEditingValue(),
-                            rightSubEditingController.currentEditingValue(),
-                          );
-                        }
-                      });
-                    },
-                    child: const Text('Substituir'),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: FilledButton(
+                      onPressed: () {
+                        setState(() {
+                          if (tempTex != null && tempTex!.isNotEmpty) {
+                            tempTex = tempTex!.replaceAll(
+                              leftSubEditingController.currentEditingValue(),
+                              rightSubEditingController.currentEditingValue(),
+                            );
+                          }
+                        });
+                      },
+                      child: const Text('Substituir'),
+                    ),
                   )
                 ],
               ),

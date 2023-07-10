@@ -55,39 +55,48 @@ class _ExportPngPageState extends State<ExportPngPage> {
               header: const Text(
                   'Substituir caractere ou palavra antes de exportar'),
               content: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(
                     width: 220,
                     child: MathField(
                       controller: leftSubEditingController,
                       authorizeAnyKey: true,
-                      decoration:
-                          const InputDecoration(border: OutlineInputBorder()),
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
                       variables: const [],
                     ),
                   ),
-                  const SizedBox(width: 10, child: Text('>')),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                    child: Text('>'),
+                  ),
                   SizedBox(
                     width: 220,
                     child: MathField(
                       controller: rightSubEditingController,
                       authorizeAnyKey: true,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
                       variables: const [],
                     ),
                   ),
-                  FilledButton(
-                    onPressed: () {
-                      setState(() {
-                        if (tempTex != null && tempTex!.isNotEmpty) {
-                          tempTex = tempTex!.replaceAll(
-                            leftSubEditingController.currentEditingValue(),
-                            rightSubEditingController.currentEditingValue(),
-                          );
-                        }
-                      });
-                    },
-                    child: const Text('Substituir'),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: FilledButton(
+                      onPressed: () {
+                        setState(() {
+                          if (tempTex != null && tempTex!.isNotEmpty) {
+                            tempTex = tempTex!.replaceAll(
+                              leftSubEditingController.currentEditingValue(),
+                              rightSubEditingController.currentEditingValue(),
+                            );
+                          }
+                        });
+                      },
+                      child: const Text('Substituir'),
+                    ),
                   )
                 ],
               ),
