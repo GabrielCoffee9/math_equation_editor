@@ -2,12 +2,12 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 class SaveInfoBar extends StatelessWidget {
   const SaveInfoBar({
-    Key? key,
+    super.key,
     required this.title,
     this.content,
     required this.close,
     this.type,
-  }) : super(key: key);
+  });
 
   final String title;
   final Widget? content;

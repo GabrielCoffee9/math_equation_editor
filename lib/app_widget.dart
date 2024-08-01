@@ -14,11 +14,11 @@ class MyApp extends StatelessWidget {
         accentColor: Colors.blue,
         buttonTheme: ButtonThemeData(
           filledButtonStyle: ButtonStyle(
-            backgroundColor: ButtonState.all<Color>(Colors.black),
+            backgroundColor: WidgetStateProperty.all<Color>(Colors.black),
           ),
         ),
         toggleSwitchTheme: ToggleSwitchThemeData(
-          checkedDecoration: ButtonState.all<Decoration>(
+          checkedDecoration: WidgetStateProperty.all<Decoration>(
             BoxDecoration(
               color: Colors.black,
               borderRadius: BorderRadius.circular(100),

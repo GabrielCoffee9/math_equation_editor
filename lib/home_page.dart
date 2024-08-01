@@ -22,7 +22,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String leftField = '';
   String rightField = '';
 
-  ValueNotifier<bool> twoSides = ValueNotifier(false);
+  ValueNotifier<bool> twoSides = ValueNotifier(true);
 
   var importer = Importer();
 
@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: EdgeInsets.only(left: 8.0, right: 8.0),
                   child: RenderTex(
                     textSource:
-                        r'\frac{\Mu ath \sum quation \sum ditor}{\alpha lpha}',
+                        r'\frac{\Mu ath \sum quation \sum ditor}{\beta eta}',
                     scaleValue: 3,
                   ),
                 ),
@@ -220,11 +220,6 @@ class _MyHomePageState extends State<MyHomePage> {
                               );
                             },
                           ),
-                          // CommandBarButton(
-                          //   icon: const Icon(FluentIcons.copy),
-                          //   label: const Text('Copy'),
-                          //   onPressed: () {},
-                          // ),
                           CommandBarButton(
                             icon: const Icon(FluentIcons.delete),
                             label: const Text('Limpar'),
