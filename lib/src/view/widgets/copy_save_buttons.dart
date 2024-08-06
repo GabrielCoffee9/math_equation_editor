@@ -17,9 +17,7 @@ class CopySaveButtons extends StatelessWidget {
       children: [
         Expanded(
           child: Padding(
-            padding: const EdgeInsetsDirectional.only(
-              end: 10,
-            ),
+            padding: const EdgeInsetsDirectional.only(end: 10),
             child: FilledButton(
               onPressed: copyOnPressed,
               child: const Text('Copiar'),

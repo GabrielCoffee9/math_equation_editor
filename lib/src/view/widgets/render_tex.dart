@@ -67,9 +67,7 @@ class RenderTex extends StatelessWidget {
     }
     return Text.rich(
       TextSpan(
-        children: [
-          equationWidget,
-        ],
+        children: [equationWidget],
       ),
     );
   }

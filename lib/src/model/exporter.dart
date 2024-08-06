@@ -9,10 +9,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:tex/tex.dart';
 import 'package:pdf/widgets.dart' as pw;
 
-import '../widgets/save_info_bar.dart';
-
 class Exporter {
-  String texToText(String tex) {
+  static String texToText(String tex) {
     return tex
         .replaceAll(r'\times', '×')
         .replaceAll(r'\int', '∫')
@@ -79,6 +77,22 @@ class Exporter {
         .replaceAll(r'\le', '≤');
   }
 
+  static String replaceUncompatibleTex(String textSource) => textSource
+      .replaceAll(r'\Alpha', ' A ')
+      .replaceAll(r'\Beta', ' B ')
+      .replaceAll(r'\Epsilon', ' E ')
+      .replaceAll(r'\Zeta', ' Z ')
+      .replaceAll(r'\Eta', ' H ')
+      .replaceAll(r'\Iota', ' I ')
+      .replaceAll(r'\Kappa', ' K ')
+      .replaceAll(r'\Mu', ' M ')
+      .replaceAll(r'\Nu', ' N ')
+      .replaceAll(r'\Rho', ' P ')
+      .replaceAll(r'\Tau', ' T ')
+      .replaceAll(r'\Chi', ' X ')
+      .replaceAll(r'\le', r'\leq')
+      .replaceAll(r'\ge', r'\geq');
+
   Future<bool> saveTex(String texsrc, {String defaultExt = 'tex'}) async {
     try {
       String? outputFile = await FilePicker.platform.saveFile(
@@ -89,9 +103,7 @@ class Exporter {
         fileName: 'export.$defaultExt',
       );
 
-      if (outputFile == null) {
-        return false;
-      }
+      if (outputFile == null) return false;
 
       File file = File(outputFile);
       await file.writeAsString(texsrc);
@@ -103,9 +115,8 @@ class Exporter {
   }
 
   Future<bool> copyWidgetAsImage(
-    BuildContext context,
     GlobalKey targetKey, {
-    String defaultExt = 'png',
+    String extension = 'png',
     double pixelRatio = 2.0,
   }) async {
     try {
@@ -118,14 +129,14 @@ class Exporter {
       }
 
       // ignore: use_build_context_synchronously
-      if (!context.mounted) return false;
+      if (!targetKey.currentContext!.mounted) return false;
       final RenderRepaintBoundary boundary =
           targetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       final image = await boundary.toImage(pixelRatio: pixelRatio);
       final byteData = await image.toByteData(format: ImageByteFormat.png);
       final pngBytes = byteData!.buffer.asUint8List();
 
-      File file = File('${tempFolder.path}\\export.$defaultExt');
+      File file = File('${tempFolder.path}\\export.$extension');
       await file.writeAsBytes(pngBytes);
 
       await copyFileClipboard(file);
@@ -137,9 +148,8 @@ class Exporter {
   }
 
   Future<bool> saveWidgetAsImage(
-    BuildContext context,
     GlobalKey targetKey, {
-    String defaultExt = 'png',
+    String extension = 'png',
     double pixelRatio = 2.0,
   }) async {
     try {
@@ -148,15 +158,13 @@ class Exporter {
         type: FileType.image,
         allowedExtensions: ['png', 'jpeg'],
         dialogTitle: 'Salvar como',
-        fileName: 'export.$defaultExt',
+        fileName: 'export.$extension',
       );
 
-      if (outputFile == null || outputFile.isEmpty) {
-        return false;
-      }
+      if (outputFile == null || outputFile.isEmpty) return false;
 
       // ignore: use_build_context_synchronously
-      if (!context.mounted) return false;
+      if (!targetKey.currentContext!.mounted) return false;
       final RenderRepaintBoundary boundary =
           targetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       final image = await boundary.toImage(pixelRatio: pixelRatio);
@@ -171,30 +179,41 @@ class Exporter {
     }
   }
 
-  Future<void> copySVG(
+  Future<bool> copySVG(
     String texsrc, {
     double scaleValue = 2.0,
     int red = 0,
     int green = 0,
     int blue = 0,
   }) async {
-    final Directory tempDir = await getTemporaryDirectory();
+    try {
+      final Directory tempDir = await getTemporaryDirectory();
 
-    var tex = TeX();
-    tex.setColor(red, green, blue);
-    tex.scalingFactor = scaleValue;
-    var svgImageData = tex.tex2svg(texsrc, displayStyle: true);
+      var tex = TeX();
+      tex.setColor(red, green, blue);
+      tex.scalingFactor = scaleValue;
+      var svgImageData =
+          tex.tex2svg(replaceUncompatibleTex(texsrc), displayStyle: true);
 
-    Directory tempFolder = Directory('${tempDir.path}\\math_equation_temp');
+      if (svgImageData.isEmpty) {
+        throw Exception('Error found on parsing TeX : ${tex.error}');
+      }
 
-    if (!tempFolder.existsSync()) {
-      tempFolder = await tempFolder.create(recursive: true);
+      Directory tempFolder = Directory('${tempDir.path}\\math_equation_temp');
+
+      if (!tempFolder.existsSync()) {
+        tempFolder = await tempFolder.create(recursive: true);
+      }
+
+      final file = File('${tempFolder.path}\\export.svg');
+      await file.writeAsString(svgImageData);
+
+      return await copyFileClipboard(file);
+    } catch (e) {
+      debugPrint(
+          'An error has occurred when trying to copy the equation to clipboard : $e');
+      return false;
     }
-
-    final file = File('${tempFolder.path}\\export.svg');
-    await file.writeAsString(svgImageData);
-
-    await copyFileClipboard(file);
   }
 
   Future<bool> saveSVG(
@@ -214,14 +233,17 @@ class Exporter {
         fileName: 'export.$defaultExt',
       );
 
-      if (outputFile == null) {
-        return false;
-      }
+      if (outputFile == null) return false;
 
       var tex = TeX();
       tex.setColor(red, green, blue);
       tex.scalingFactor = scaleValue;
-      var svgImageData = tex.tex2svg(texsrc, displayStyle: true);
+      var svgImageData =
+          tex.tex2svg(replaceUncompatibleTex(texsrc), displayStyle: true);
+
+      if (svgImageData.isEmpty) {
+        throw Exception('Error found on parsing TeX : ${tex.error}');
+      }
 
       File file = File(outputFile);
       await file.writeAsString(svgImageData);
@@ -232,42 +254,48 @@ class Exporter {
     }
   }
 
-  Future<void> copyPDF(
+  Future<bool> copyPDF(
     String texsrc, {
     double scaleValue = 2.0,
     int red = 0,
     int green = 0,
     int blue = 0,
   }) async {
-    final Directory tempDir = await getTemporaryDirectory();
+    try {
+      final Directory tempDir = await getTemporaryDirectory();
 
-    final pdf = pw.Document();
+      final pdf = pw.Document();
 
-    var tex = TeX();
+      var tex = TeX();
 
-    tex.setColor(red, green, blue);
-    tex.scalingFactor = scaleValue;
+      tex.setColor(red, green, blue);
+      tex.scalingFactor = scaleValue;
 
-    final svgImage = pw.SvgImage(svg: tex.tex2svg(texsrc, displayStyle: true));
+      final svgImage = pw.SvgImage(
+          svg: tex.tex2svg(replaceUncompatibleTex(texsrc), displayStyle: true));
 
-    pdf.addPage(
-      pw.Page(
-        build: (pw.Context context) {
-          return pw.Center(child: svgImage); // Center
-        },
-      ),
-    );
+      pdf.addPage(
+        pw.Page(
+          build: (pw.Context context) => pw.Center(child: svgImage),
+        ),
+      );
 
-    Directory tempFolder = Directory('${tempDir.path}\\math_equation_temp');
+      Directory tempFolder = Directory('${tempDir.path}\\math_equation_temp');
 
-    if (!tempFolder.existsSync()) {
-      tempFolder = await tempFolder.create(recursive: true);
+      if (!tempFolder.existsSync()) {
+        tempFolder = await tempFolder.create(recursive: true);
+      }
+
+      final file = File('${tempFolder.path}\\export.pdf');
+      await file.writeAsBytes(await pdf.save());
+
+      return await copyFileClipboard(file);
+    } catch (e) {
+      debugPrint(
+        'An error has occurred when trying to copy the equation as PDF : $e',
+      );
+      return false;
     }
-
-    final file = File('${tempFolder.path}\\export.pdf');
-    await file.writeAsBytes(await pdf.save());
-
-    await copyFileClipboard(file);
   }
 
   Future<bool> savePDF(
@@ -286,9 +314,7 @@ class Exporter {
         fileName: 'export.pdf',
       );
 
-      if (outputFile == null) {
-        return false;
-      }
+      if (outputFile == null) return false;
 
       final pdf = pw.Document();
 
@@ -297,14 +323,18 @@ class Exporter {
       tex.setColor(red, green, blue);
       tex.scalingFactor = scaleValue;
 
-      final svgImage =
-          pw.SvgImage(svg: tex.tex2svg(texsrc, displayStyle: true));
+      final svgImageData =
+          tex.tex2svg(replaceUncompatibleTex(texsrc), displayStyle: true);
+
+      if (svgImageData.isEmpty) {
+        throw Exception('Error found on parsing TeX : ${tex.error}');
+      }
+
+      final svgImage = pw.SvgImage(svg: svgImageData);
 
       pdf.addPage(
         pw.Page(
-          build: (pw.Context context) {
-            return pw.Center(child: svgImage); // Center
-          },
+          build: (pw.Context context) => pw.Center(child: svgImage),
         ),
       );
 
@@ -317,28 +347,17 @@ class Exporter {
     }
   }
 
-  void copyTextClipboard(String text) {
-    Pasteboard.writeText(text);
-  }
-
-  Future<void> copyFileClipboard(File file) async {
-    await Pasteboard.writeFiles([file.path]);
-  }
-
-  void displayExportResult(BuildContext context, String title, String info,
-      [bool sucess = true]) {
-    if (!context.mounted) return;
-    displayInfoBar(
-      context,
-      builder: (context, close) => SaveInfoBar(
-        title: title,
-        content: Text(info),
-        close: close,
-        type: sucess ? InfoBarSeverity.success : InfoBarSeverity.error,
-      ),
-    );
-    if (sucess) {
-      Navigator.of(context).pop();
+  bool copyTextClipboard(String text) {
+    try {
+      Pasteboard.writeText(text);
+      return true;
+    } on Exception catch (e) {
+      debugPrint('Error when trying to copy to clipboard : $e');
+      return false;
     }
+  }
+
+  Future<bool> copyFileClipboard(File file) async {
+    return await Pasteboard.writeFiles([file.path]);
   }
 }

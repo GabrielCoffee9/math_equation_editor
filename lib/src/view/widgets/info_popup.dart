@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-class SaveInfoBar extends StatelessWidget {
-  const SaveInfoBar({
+class InfoPopUp extends StatelessWidget {
+  const InfoPopUp({
     super.key,
     required this.title,
     this.content,

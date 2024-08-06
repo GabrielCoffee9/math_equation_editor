@@ -11,8 +11,6 @@ class WidgetToImage extends StatefulWidget {
 class _WidgetToImageState extends State<WidgetToImage> {
   @override
   Widget build(BuildContext context) {
-    return RepaintBoundary(
-      child: widget.targetWidget,
-    );
+    return RepaintBoundary(child: widget.targetWidget);
   }
 }

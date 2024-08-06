@@ -19,7 +19,7 @@ class Importer {
         file = File(result.files.single.path!);
       } else {
         // User canceled the picker
-        throw (Exception('user canceled'));
+        throw Exception('user canceled');
       }
 
       final String fullMath = await file.readAsString();
@@ -31,16 +31,12 @@ class Importer {
 
       leftSide = equalSignSplit[0];
 
-      if (equalSignSplit.length > 1) {
-        rightSide = equalSignSplit[1];
-      }
+      if (equalSignSplit.length > 1) rightSide = equalSignSplit[1];
 
       Map<String, dynamic> parsedLeftSide = jsonDecode(leftSide);
       Map<String, dynamic>? parsedSide;
 
-      if (rightSide != null) {
-        parsedSide = jsonDecode(rightSide);
-      }
+      if (rightSide != null) parsedSide = jsonDecode(rightSide);
 
       return (parsedLeftSide, parsedSide);
     } catch (e) {
