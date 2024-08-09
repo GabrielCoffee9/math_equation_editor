@@ -5,14 +5,19 @@ import 'package:flutter_svg/flutter_svg.dart';
 class RenderTex extends StatelessWidget {
   const RenderTex({
     super.key,
+    this.displayStyle = true,
     required this.textSource,
     this.red = 0,
     this.blue = 0,
     this.green = 0,
     this.scaleValue = 2.0,
+    this.keepEmptyBoxes = false,
   });
 
   final String textSource;
+
+  final bool displayStyle;
+  final bool keepEmptyBoxes;
 
   final int red;
   final int green;
@@ -36,6 +41,10 @@ class RenderTex extends StatelessWidget {
       .replaceAll(r'\le', r'\leq')
       .replaceAll(r'\ge', r'\geq');
 
+  String _removeEmptyBoxes(String textSource) =>
+      // ignore: unnecessary_string_escapes
+      textSource.replaceAll('\\Box', ' ');
+
   @override
   Widget build(BuildContext context) {
     TeX tex = TeX();
@@ -45,9 +54,23 @@ class RenderTex extends StatelessWidget {
     tex.setColor(red, green, blue);
     tex.scalingFactor = scaleValue;
 
-    var svg = tex.tex2svg(
-      textSource.isNotEmpty ? _replaceUncompatibleTex(textSource) : textSource,
-    );
+    String svg;
+
+    if (keepEmptyBoxes) {
+      svg = tex.tex2svg(
+        displayStyle: displayStyle,
+        textSource.isNotEmpty
+            ? _replaceUncompatibleTex(textSource)
+            : textSource,
+      );
+    } else {
+      svg = tex.tex2svg(
+        displayStyle: displayStyle,
+        textSource.isNotEmpty
+            ? _removeEmptyBoxes(_replaceUncompatibleTex(textSource))
+            : textSource,
+      );
+    }
 
     if (svg.isEmpty) {
       equationWidget = TextSpan(

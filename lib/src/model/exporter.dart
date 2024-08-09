@@ -185,6 +185,7 @@ class Exporter {
     int red = 0,
     int green = 0,
     int blue = 0,
+    bool keepEmptyBoxes = true,
   }) async {
     try {
       final Directory tempDir = await getTemporaryDirectory();
@@ -192,8 +193,18 @@ class Exporter {
       var tex = TeX();
       tex.setColor(red, green, blue);
       tex.scalingFactor = scaleValue;
-      var svgImageData =
-          tex.tex2svg(replaceUncompatibleTex(texsrc), displayStyle: true);
+
+      String svgImageData;
+
+      if (keepEmptyBoxes) {
+        svgImageData =
+            tex.tex2svg(replaceUncompatibleTex(texsrc), displayStyle: true);
+      } else {
+        svgImageData = tex.tex2svg(
+          replaceUncompatibleTex(texsrc).replaceAll('\\Box', ' '),
+          displayStyle: true,
+        );
+      }
 
       if (svgImageData.isEmpty) {
         throw Exception('Error found on parsing TeX : ${tex.error}');
@@ -223,6 +234,7 @@ class Exporter {
     int red = 0,
     int green = 0,
     int blue = 0,
+    bool keepEmptyBoxes = true,
   }) async {
     try {
       String? outputFile = await FilePicker.platform.saveFile(
@@ -238,8 +250,18 @@ class Exporter {
       var tex = TeX();
       tex.setColor(red, green, blue);
       tex.scalingFactor = scaleValue;
-      var svgImageData =
-          tex.tex2svg(replaceUncompatibleTex(texsrc), displayStyle: true);
+
+      String svgImageData;
+
+      if (keepEmptyBoxes) {
+        svgImageData =
+            tex.tex2svg(replaceUncompatibleTex(texsrc), displayStyle: true);
+      } else {
+        svgImageData = tex.tex2svg(
+          replaceUncompatibleTex(texsrc).replaceAll('\\Box', ' '),
+          displayStyle: true,
+        );
+      }
 
       if (svgImageData.isEmpty) {
         throw Exception('Error found on parsing TeX : ${tex.error}');

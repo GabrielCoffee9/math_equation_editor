@@ -1,16 +1,8 @@
-# math_equation_editor
+# ![logo](https://i.imgur.com/M1ySXIB.png) 
 
-A new Flutter project.
+`math_equation_editor` is a free and open source Flutter offline application for desktop that allows easy editing and exporting math equations. 
+It has a custom-made fully integrated math keyboard in _Flutter only_ - no plugins, no web views.
 
-## Getting Started
+A HUGE thanks to [simpleclub](https://github.com/simpleclub) that made the original [math_keyboard](https://github.com/simpleclub/math_keyboard.git) ! 
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This application uses a [math_keyboard fork](https://github.com/GabrielCoffee9/math_keyboard) for personalized new buttons and features.  

@@ -69,6 +69,7 @@ class EquationViewModel extends ChangeNotifier {
     int red = 0,
     int green = 0,
     int blue = 0,
+    bool keepEmptyBoxes = true,
   }) async {
     try {
       if (!Equation.allowedExportExtensions.contains(extensionKey)) {
@@ -86,6 +87,7 @@ class EquationViewModel extends ChangeNotifier {
         red: rgbColor.red,
         green: rgbColor.green,
         blue: rgbColor.blue,
+        keepEmptyBoxes: keepEmptyBoxes,
       );
 
       return exportResult;
@@ -102,6 +104,7 @@ class EquationViewModel extends ChangeNotifier {
     int red = 0,
     int green = 0,
     int blue = 0,
+    bool keepEmptyBoxes = true,
   }) async {
     try {
       if (!Equation.allowedExportExtensions.contains(extensionKey)) {
@@ -119,6 +122,7 @@ class EquationViewModel extends ChangeNotifier {
         red: rgbColor.red,
         green: rgbColor.green,
         blue: rgbColor.blue,
+        keepEmptyBoxes: keepEmptyBoxes,
       );
 
       return copyResult;

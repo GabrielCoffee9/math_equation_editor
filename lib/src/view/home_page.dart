@@ -42,6 +42,7 @@ class _HomePageState extends State<HomePage> {
                 const Padding(
                   padding: EdgeInsets.only(left: 8.0, right: 8.0),
                   child: RenderTex(
+                    displayStyle: false,
                     textSource:
                         r'\frac{\Mu ath \sum quation \sum ditor}{\beta eta}',
                     scaleValue: 3,
@@ -288,7 +289,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
             SizedBox(

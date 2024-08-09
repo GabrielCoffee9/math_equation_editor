@@ -32,6 +32,8 @@ class _ExportEquationPageState extends State<ExportEquationPage> {
   int green = 0;
   int blue = 0;
 
+  bool hideEmptyBoxes = false;
+
   var leftSubEditingController = MathFieldEditingController();
   var rightSubEditingController = MathFieldEditingController();
 
@@ -53,6 +55,7 @@ class _ExportEquationPageState extends State<ExportEquationPage> {
       green: green,
       blue: blue,
       scaleValue: scaleValue,
+      keepEmptyBoxes: !hideEmptyBoxes,
     );
     return ScaffoldPage(
       content: SingleChildScrollView(
@@ -218,6 +221,24 @@ class _ExportEquationPageState extends State<ExportEquationPage> {
                 ],
               ),
             ),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Checkbox(
+                    checked: hideEmptyBoxes,
+                    content: const Text(
+                      'Ocultar espaços vazios em exportações gráficas',
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        hideEmptyBoxes = value!;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: Row(
@@ -279,7 +300,6 @@ class _ExportEquationPageState extends State<ExportEquationPage> {
             ),
             SingleChildScrollView(
               child: SizedBox(
-                height: 375,
                 child: Builder(
                   builder: (context) {
                     if (extension.value == 'text') {
@@ -320,6 +340,7 @@ class _ExportEquationPageState extends State<ExportEquationPage> {
               red: red,
               green: green,
               blue: blue,
+              keepEmptyBoxes: !hideEmptyBoxes,
             );
 
             if (result) {
@@ -350,6 +371,7 @@ class _ExportEquationPageState extends State<ExportEquationPage> {
               red: red,
               green: green,
               blue: blue,
+              keepEmptyBoxes: !hideEmptyBoxes,
             );
 
             if (result) {

@@ -50,6 +50,7 @@ class Equation {
     int red = 0,
     int green = 0,
     int blue = 0,
+    bool keepEmptyBoxes = true,
   }) async {
     try {
       final exporter = Exporter();
@@ -58,7 +59,8 @@ class Equation {
 
       switch (extension) {
         case 'svg':
-          saveExtensionsResult = await exporter.saveSVG(teXString);
+          saveExtensionsResult =
+              await exporter.saveSVG(teXString, keepEmptyBoxes: keepEmptyBoxes);
           break;
 
         case 'text':
@@ -98,6 +100,7 @@ class Equation {
     int red = 0,
     int green = 0,
     int blue = 0,
+    bool keepEmptyBoxes = true,
   }) async {
     try {
       final exporter = Exporter();
@@ -112,6 +115,7 @@ class Equation {
             red: red,
             green: green,
             blue: blue,
+            keepEmptyBoxes: keepEmptyBoxes,
           );
           break;
 
